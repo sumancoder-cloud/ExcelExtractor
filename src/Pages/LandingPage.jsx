@@ -3,6 +3,7 @@ import {useState} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { FaHamburger } from "react-icons/fa";
 import {faUpload, faFilePdf,faFileExcel,faCalendarCheck}  from '@fortawesome/free-solid-svg-icons';
+import {Link} from "react-router-dom"
 const LandingPage=()=>{
     const MAX_FILE_SIZE = 5 * 1024 * 1024;
     const handleChange=(e)=>{
@@ -42,8 +43,8 @@ const showCard=()=>{
                 </ul>
             </div>
             <div className="flex justify-between gap-10 m-10">
-                <button className=" hidden md:flex  bg-white px-5 py-2 rounded-lg hover:bg-gray-300 cursor-pointer">Login</button>
-                <button className="hidden md:flex  bg-white px-5 py-2 rounded-lg hover:bg-gray-300 cursor-pointer">SignUp</button>
+                <button className=" hidden md:flex  bg-white px-5 py-2 rounded-lg hover:bg-gray-300 cursor-pointer"><Link to='/login'>Login</Link></button>
+                <button className="hidden md:flex  bg-white px-5 py-2 rounded-lg hover:bg-gray-300 cursor-pointer"><Link to='/signUp'>SignUp</Link></button>
         <div>
             <button className="md:hidden text-white w-[30px] text-2xl cursor-pointer hover:text-gray-300 "onClick={()=>setShowMenu(!showMenu)}><FaHamburger /></button>
         </div>
@@ -59,8 +60,8 @@ const showCard=()=>{
             <li className="cursor-pointer border-2 w-full px-5 py-2">Features</li>
             <li className="cursor-pointer border-2 w-full px-5 py-2">PDF To Excel</li>
             <li className="cursor-pointer border-2 w-full px-5 py-2">Image To Excel</li>
-           <button className="bg-orange-500 w-full px-5 py-2 text-white hover:bg-orange-200 cursor-pointer ">Login</button>
-           <button className="bg-orange-500 w-full px-5 py-2 text-white hover:bg-orange-200 cursor-pointer">SignUp</button>
+           <button className="bg-orange-500 w-full px-5 py-2 text-white hover:bg-orange-200 cursor-pointer "><Link to='/login'>Login</Link></button>
+           <button className="bg-orange-500 w-full px-5 py-2 text-white hover:bg-orange-200 cursor-pointer"><Link to='/signUp'>SignUp</Link></button>
         </ul>
     </div>
   </div>

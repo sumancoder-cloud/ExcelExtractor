@@ -3,13 +3,57 @@ import { FaUserAstronaut } from "react-icons/fa";
 import { FaEyeSlash, FaEye } from "react-icons/fa6";
 import { PiSignIn } from "react-icons/pi";
 import { FcGoogle } from "react-icons/fc";
+import MainPage from './MainPage';
+
 
 const LoginPage = () => {
   const [hidePassword, setHidePassword] = useState(true);
 
+  const handleSubmit=(e)=>{
+      e.preventDefault();
+      const data=new FormData(e.target);
+      console.log(Object.fromEntries(data.entries()));
+      if (validate()) {
+    
+        console.log("Valid Data:", formData);
+  }
+   return Object.keys(errors).length===0;
+
+  }
+
+  const[formData,setFormData]=useState({
+    email:"",
+    password:""
+  });
+
+  const [errors,setErrors]=useState({});
+
+  const handleChange=(e)=>{
+   
+    setFormData({
+      ...formData,
+      [e.target.name]:e.target.value,
+    });
+  };
+
+  const validate=()=>{
+    let tempErrors={};
+    if(!formData.email){
+      tempErrors.email="Email is required";
+    }else if(!/\S+@\S+\.\S+/.test(formData.email)){
+        tempErrors.email="Invalid email Format";
+    }
+
+    if(!formData.password){
+      tempErrors.password="Password is Required"
+    }else if(!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{6,}$/.test(formData.password)){
+      tempErrors.password="Atleast 1 Capital Letter,Number and min 6 characters required"
+    }
+  setErrors(tempErrors)
+  }
   return (
     <div className="flex min-h-screen justify-center items-center bg-gray-100">
-      <div className="relative w-[400px] bg-white h-[520px] shadow-orange-500 shadow-lg rounded-lg border-4 border-dashed border-orange-500 flex flex-col items-center pt-16">
+      <div className="relative w-[400px] bg-white h-[550px] shadow-orange-500 shadow-lg rounded-lg border-4 border-dashed border-orange-500 flex flex-col items-center pt-16">
 
         <FaUserAstronaut className="text-7xl text-white bg-orange-400 rounded-full absolute -top-10 p-3" />
 
@@ -17,7 +61,7 @@ const LoginPage = () => {
           LOGIN
         </h1>
 
-        <form className="w-full px-8 space-y-5">
+        <form className="w-full px-8 space-y-5" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="text-orange-500 font-bold text-xl">
               Email
@@ -25,9 +69,17 @@ const LoginPage = () => {
             <input
               id="email"
               type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               placeholder="example@gmail.com"
               className="w-full border-2 rounded-lg px-4 py-2 mt-2"
             />
+          {
+            errors.email &&(
+              <p className="text-red-500">{errors.email}</p>
+            )
+          }
           </div>
 
           <div className="relative">
@@ -36,9 +88,17 @@ const LoginPage = () => {
             </label>
             <input
               id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               type={hidePassword ? "password" : "text"}
               className="w-full border-2 rounded-lg px-4 py-2 mt-2"
             />
+            {
+              errors.password&&(
+                <p className="text-red-400">{errors.password}</p>
+              )
+            }
             <button
               type="button"
               onClick={() => setHidePassword(!hidePassword)}

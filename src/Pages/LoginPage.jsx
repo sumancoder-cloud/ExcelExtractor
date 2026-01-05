@@ -4,11 +4,11 @@ import { FaEyeSlash, FaEye } from "react-icons/fa6";
 import { PiSignIn } from "react-icons/pi";
 import { FcGoogle } from "react-icons/fc";
 import MainPage from './MainPage';
-
+import {useNavigate} from 'react-router-dom';
 
 const LoginPage = () => {
   const [hidePassword, setHidePassword] = useState(true);
-
+  const navigate=useNavigate();
   const handleSubmit=(e)=>{
       e.preventDefault();
       const data=new FormData(e.target);
@@ -16,8 +16,9 @@ const LoginPage = () => {
       if (validate()) {
     
         console.log("Valid Data:", formData);
+        navigate("/main");
   }
-   return Object.keys(errors).length===0;
+  
 
   }
 
@@ -49,8 +50,11 @@ const LoginPage = () => {
     }else if(!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{6,}$/.test(formData.password)){
       tempErrors.password="Atleast 1 Capital Letter,Number and min 6 characters required"
     }
-  setErrors(tempErrors)
+  setErrors(tempErrors);
+  return Object.keys(tempErrors).length===0;
   }
+
+ 
   return (
     <div className="flex min-h-screen justify-center items-center bg-gray-100">
       <div className="relative w-[400px] bg-white h-[550px] shadow-orange-500 shadow-lg rounded-lg border-4 border-dashed border-orange-500 flex flex-col items-center pt-16">

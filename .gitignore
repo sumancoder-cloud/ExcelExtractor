@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Credentials and secrets
+**/google-vision-api.json
+**/.env
+**/.env.local
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

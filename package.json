@@ -1,0 +1,28 @@
+{
+  "name": "excelextractor",
+  "version": "1.0.0",
+  "description": "wanna explore everything",
+  "main": "index.js",
+  "scripts": {
+    "start": "start.bat",
+    "stop": "stop.bat",
+    "install:all": "npm install --prefix backend && npm install --prefix ExcelExtractor",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix ExcelExtractor"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ExcelExtractor"
+  },
+  "keywords": [
+    "nothing"
+  ],
+  "author": "Tati Suman Yadav",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^3.1.11"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

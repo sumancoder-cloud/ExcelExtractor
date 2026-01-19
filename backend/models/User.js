@@ -30,6 +30,20 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  passwordResetToken: {
+    type: String,
+    sparse: true,
+  },
+  passwordResetExpires: {
+    type: Date,
+  },
+  resetOTP: {
+    type: String,
+    sparse: true,
+  },
+  resetOTPExpires: {
+    type: Date,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

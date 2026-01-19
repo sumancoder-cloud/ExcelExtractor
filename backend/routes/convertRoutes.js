@@ -6,6 +6,7 @@ const fs = require('fs');
 const { protect } = require('../middleware/auth');
 const { convertPDFToExcel, convertImageToExcel } = require('../utils/converter');
 const Feedback = require('../models/Feedback');
+const ConversionHistory = require('../models/ConversionHistory');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -51,6 +52,7 @@ const upload = multer({
 // @access  Private
 router.post('/upload', protect, upload.single('file'), async (req, res) => {
   try {
+    req.startTime = Date.now();
     console.log('=== File Upload Request ===');
     
     if (!req.file) {
@@ -86,6 +88,26 @@ router.post('/upload', protect, upload.single('file'), async (req, res) => {
     console.log('Extraction method:', result.extractionMethod);
     console.log('Confidence:', result.confidence);
 
+    // Save conversion to history
+    const conversionRecord = new ConversionHistory({
+      userId: req.user.id,
+      originalFileName: req.file.originalname,
+      convertedFileName: 'converted.xlsx',
+      fileType: fileType.startsWith('image/') ? 'image' : 'pdf',
+      mimeType: fileType,
+      originalFileSize: req.file.size,
+      downloadUrl: `/api/convert/download/${path.basename(result.excelPath)}`,
+      filePath: result.excelPath,
+      extractedText: result.extractedText || [],
+      tableData: result.tableData || null,
+      extractionMethod: result.extractionMethod,
+      confidence: result.confidence,
+      conversionTime: Date.now() - req.startTime,
+      status: 'success'
+    });
+
+    await conversionRecord.save();
+
     // Return both extracted text and download info
     res.json({
       success: true,
@@ -94,7 +116,8 @@ router.post('/upload', protect, upload.single('file'), async (req, res) => {
       downloadUrl: `/api/convert/download/${path.basename(result.excelPath)}`,
       fileName: 'converted.xlsx',
       extractionMethod: result.extractionMethod,
-      confidence: result.confidence
+      confidence: result.confidence,
+      historyId: conversionRecord._id
     });
 
   } catch (error) {
@@ -177,6 +200,130 @@ router.post('/feedback', protect, async (req, res) => {
   } catch (error) {
     console.error('Feedback submission error:', error);
     res.status(500).json({ success: false, message: 'Failed to submit feedback' });
+  }
+});
+
+// @route   GET /api/convert/history
+// @desc    Get user's conversion history
+// @access  Private
+router.get('/history', protect, async (req, res) => {
+  try {
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 10;
+    const skip = (page - 1) * limit;
+
+    const conversions = await ConversionHistory.find({ userId: req.user.id })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const total = await ConversionHistory.countDocuments({ userId: req.user.id });
+
+    res.status(200).json({
+      success: true,
+      conversions,
+      pagination: {
+        total,
+        page,
+        limit,
+        pages: Math.ceil(total / limit)
+      }
+    });
+  } catch (error) {
+    console.error('Fetch history error:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch conversion history' });
+  }
+});
+
+// @route   GET /api/convert/history/:id
+// @desc    Get specific conversion details
+// @access  Private
+router.get('/history/:id', protect, async (req, res) => {
+  try {
+    const conversion = await ConversionHistory.findOne({
+      _id: req.params.id,
+      userId: req.user.id
+    });
+
+    if (!conversion) {
+      return res.status(404).json({
+        success: false,
+        message: 'Conversion not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      conversion
+    });
+  } catch (error) {
+    console.error('Fetch conversion error:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch conversion' });
+  }
+});
+
+// @route   GET /api/convert/download-history/:id
+// @desc    Download file from conversion history
+// @access  Private
+router.get('/download-history/:id', protect, async (req, res) => {
+  try {
+    const conversion = await ConversionHistory.findOne({
+      _id: req.params.id,
+      userId: req.user.id
+    });
+
+    if (!conversion) {
+      return res.status(404).json({
+        success: false,
+        message: 'Conversion not found'
+      });
+    }
+
+    if (!fs.existsSync(conversion.filePath)) {
+      return res.status(404).json({
+        success: false,
+        message: 'File no longer available'
+      });
+    }
+
+    res.download(conversion.filePath, conversion.convertedFileName);
+  } catch (error) {
+    console.error('Download history file error:', error);
+    res.status(500).json({ success: false, message: 'Download failed' });
+  }
+});
+
+// @route   DELETE /api/convert/history/:id
+// @desc    Delete conversion history record
+// @access  Private
+router.delete('/history/:id', protect, async (req, res) => {
+  try {
+    const conversion = await ConversionHistory.findOne({
+      _id: req.params.id,
+      userId: req.user.id
+    });
+
+    if (!conversion) {
+      return res.status(404).json({
+        success: false,
+        message: 'Conversion not found'
+      });
+    }
+
+    // Delete file if exists
+    if (fs.existsSync(conversion.filePath)) {
+      fs.unlinkSync(conversion.filePath);
+    }
+
+    await ConversionHistory.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Conversion deleted successfully'
+    });
+  } catch (error) {
+    console.error('Delete history error:', error);
+    res.status(500).json({ success: false, message: 'Failed to delete conversion' });
   }
 });
 

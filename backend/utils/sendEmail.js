@@ -74,9 +74,6 @@ const sendEmailWithOTP = async (email, otp) => {
     return true; // Don't fail the request if email fails
   }
 };
-    throw error;
-  }
-};
 
 // Keep the old function for other email types if needed
 const sendEmail = async (email, subject, resetUrl) => {

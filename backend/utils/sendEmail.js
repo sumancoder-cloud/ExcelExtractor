@@ -1,31 +1,14 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendEmailWithOTP = async (email, otp) => {
   try {
-    // Create a transporter using Gmail with optimized settings for reliability
-    // For Gmail, you need to use an app-specific password
-    // See: https://myaccount.google.com/apppasswords
-    
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-      console.warn('Email credentials not configured. OTP will be logged to console.');
-      console.log(`[DEV MODE] OTP for ${email}: ${otp}`);
+    if (!process.env.RESEND_API_KEY) {
+      console.warn('Resend API key not configured.');
+      console.log(`[FALLBACK] OTP for ${email}: ${otp}`);
       return true;
     }
-    
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      },
-      connectionTimeout: 10000,
-      socketTimeout: 10000,
-      tls: {
-        rejectUnauthorized: false
-      }
-    });
 
     // Email content with OTP
     const htmlContent = `
@@ -65,7 +48,7 @@ const sendEmailWithOTP = async (email, otp) => {
     `;
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: 'noreply@excelextractor.com',
       to: email,
       subject: 'Password Reset Verification Code',
       html: htmlContent
@@ -76,20 +59,24 @@ const sendEmailWithOTP = async (email, otp) => {
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {
         console.log(`Sending OTP email to ${email} (Attempt ${attempt}/3)...`);
-        await transporter.sendMail(mailOptions);
+        const response = await resend.emails.send(mailOptions);
+        
+        if (response.error) {
+          throw new Error(response.error.message);
+        }
+        
         console.log(`✅ OTP email sent successfully to ${email}`);
         return true;
       } catch (attemptError) {
         lastError = attemptError;
         console.warn(`❌ Attempt ${attempt} failed:`, attemptError.message);
         if (attempt < 3) {
-          // Wait before retrying (exponential backoff: 2s, 4s)
           await new Promise(resolve => setTimeout(resolve, attempt * 2000));
         }
       }
     }
     
-    // If all retries failed, log and continue (don't break the flow)
+    // If all retries failed, log OTP for fallback
     console.error('Email sending failed after 3 attempts:', lastError?.message);
     console.log(`[FALLBACK] OTP for ${email}: ${otp}`);
     return true;
@@ -103,25 +90,10 @@ const sendEmailWithOTP = async (email, otp) => {
 // Keep the old function for other email types if needed
 const sendEmail = async (email, subject, resetUrl) => {
   try {
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-      console.warn('Email credentials not configured.');
+    if (!process.env.RESEND_API_KEY) {
+      console.warn('Resend API key not configured.');
       return true;
     }
-    
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      },
-      connectionTimeout: 10000,
-      socketTimeout: 10000,
-      tls: {
-        rejectUnauthorized: false
-      }
-    });
 
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -153,7 +125,7 @@ const sendEmail = async (email, subject, resetUrl) => {
     `;
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: 'noreply@excelextractor.com',
       to: email,
       subject: subject,
       html: htmlContent
@@ -164,7 +136,12 @@ const sendEmail = async (email, subject, resetUrl) => {
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {
         console.log(`Sending email to ${email} (Attempt ${attempt}/3)...`);
-        await transporter.sendMail(mailOptions);
+        const response = await resend.emails.send(mailOptions);
+        
+        if (response.error) {
+          throw new Error(response.error.message);
+        }
+        
         console.log(`✅ Email sent successfully to ${email}`);
         return true;
       } catch (attemptError) {

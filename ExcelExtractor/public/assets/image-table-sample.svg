@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" fill="#ffffff"/>
+  <rect x="50" y="50" width="300" height="200" fill="#f8fafc" stroke="#e2e8f0"/>
+  <line x1="50" y1="100" x2="350" y2="100" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="50" y1="150" x2="350" y2="150" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="50" y1="200" x2="350" y2="200" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="150" y1="50" x2="150" y2="250" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="250" y1="50" x2="250" y2="250" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="100" y="75" font-family="Arial, sans-serif" font-size="12" fill="#475569">Name</text>
+  <text x="200" y="75" font-family="Arial, sans-serif" font-size="12" fill="#475569">Email</text>
+  <text x="300" y="75" font-family="Arial, sans-serif" font-size="12" fill="#475569">Phone</text>
+  <text x="100" y="125" font-family="Arial, sans-serif" font-size="12" fill="#475569">John Doe</text>
+  <text x="200" y="125" font-family="Arial, sans-serif" font-size="12" fill="#475569">john@example.com</text>
+  <text x="300" y="125" font-family="Arial, sans-serif" font-size="12" fill="#475569">555-0123</text>
+  <text x="100" y="175" font-family="Arial, sans-serif" font-size="12" fill="#475569">Jane Smith</text>
+  <text x="200" y="175" font-family="Arial, sans-serif" font-size="12" fill="#475569">jane@example.com</text>
+  <text x="300" y="175" font-family="Arial, sans-serif" font-size="12" fill="#475569">555-0456</text>
+  <text x="100" y="225" font-family="Arial, sans-serif" font-size="12" fill="#475569">Bob Johnson</text>
+  <text x="200" y="225" font-family="Arial, sans-serif" font-size="12" fill="#475569">bob@example.com</text>
+  <text x="300" y="225" font-family="Arial, sans-serif" font-size="12" fill="#475569">555-0789</text>
+</svg>

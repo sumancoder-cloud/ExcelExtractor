@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" fill="#f3f4f6"/>
+  <rect x="50" y="50" width="300" height="40" fill="#e5e7eb" stroke="#d1d5db"/>
+  <rect x="50" y="110" width="300" height="40" fill="#e5e7eb" stroke="#d1d5db"/>
+  <rect x="50" y="170" width="300" height="40" fill="#e5e7eb" stroke="#d1d5db"/>
+  <rect x="50" y="230" width="300" height="40" fill="#e5e7eb" stroke="#d1d5db"/>
+  <text x="70" y="75" font-family="Arial, sans-serif" font-size="14" fill="#374151">Product Name</text>
+  <text x="70" y="135" font-family="Arial, sans-serif" font-size="14" fill="#374151">Price</text>
+  <text x="70" y="195" font-family="Arial, sans-serif" font-size="14" fill="#374151">Quantity</text>
+  <text x="70" y="255" font-family="Arial, sans-serif" font-size="14" fill="#374151">Total</text>
+  <text x="250" y="75" font-family="Arial, sans-serif" font-size="14" fill="#374151">Widget A</text>
+  <text x="250" y="135" font-family="Arial, sans-serif" font-size="14" fill="#374151">$29.99</text>
+  <text x="250" y="195" font-family="Arial, sans-serif" font-size="14" fill="#374151">5</text>
+  <text x="250" y="255" font-family="Arial, sans-serif" font-size="14" fill="#374151">$149.95</text>
+</svg>

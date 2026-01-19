@@ -41,6 +41,10 @@ const ForgotPasswordPage = () => {
 
       if (response.ok) {
         setMessage('OTP sent to your email! Please check your inbox.');
+        // For development: Show OTP if returned in response
+        if (data.otp) {
+          setMessage(`OTP sent! (Dev mode: ${data.otp})`);
+        }
         setStep(2); // Move to OTP verification step
       } else {
         setError(data.message || 'Failed to send OTP');

@@ -1,22 +1,13 @@
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
 const sendEmailWithOTP = async (email, otp) => {
   try {
-    // Create a transporter using Gmail (or your email provider)
-    // For Gmail, you need to use an app-specific password
-    // See: https://myaccount.google.com/apppasswords
-    
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-      throw new Error('Email credentials not configured. Please set EMAIL_USER and EMAIL_PASSWORD environment variables.');
+    // Use SendGrid for email (works with Railway)
+    if (!process.env.SENDGRID_API_KEY) {
+      throw new Error('SENDGRID_API_KEY not configured. Please set it in environment variables.');
     }
     
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      }
-    });
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
     // Email content with OTP
     const htmlContent = `
@@ -55,15 +46,15 @@ const sendEmailWithOTP = async (email, otp) => {
       </div>
     `;
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER || 'sumanyadav_tati@srmap.edu.in',
+    const msg = {
       to: email,
+      from: process.env.SENDGRID_FROM_EMAIL || 'noreply@excelextractor.app',
       subject: 'Password Reset Verification Code',
       html: htmlContent
     };
 
     // Send email
-    await transporter.sendMail(mailOptions);
+    await sgMail.send(msg);
     console.log(`OTP email sent successfully to ${email}`);
     return true;
   } catch (error) {
@@ -75,17 +66,11 @@ const sendEmailWithOTP = async (email, otp) => {
 // Keep the old function for other email types if needed
 const sendEmail = async (email, subject, resetUrl) => {
   try {
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-      throw new Error('Email credentials not configured. Please set EMAIL_USER and EMAIL_PASSWORD environment variables.');
+    if (!process.env.SENDGRID_API_KEY) {
+      throw new Error('SENDGRID_API_KEY not configured. Please set it in environment variables.');
     }
     
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      }
-    });
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -116,14 +101,14 @@ const sendEmail = async (email, subject, resetUrl) => {
       </div>
     `;
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER || 'sumanyadav_tati@srmap.edu.in',
+    const msg = {
       to: email,
+      from: process.env.SENDGRID_FROM_EMAIL || 'noreply@excelextractor.app',
       subject: subject,
       html: htmlContent
     };
 
-    await transporter.sendMail(mailOptions);
+    await sgMail.send(msg);
     console.log(`Email sent successfully to ${email}`);
     return true;
   } catch (error) {

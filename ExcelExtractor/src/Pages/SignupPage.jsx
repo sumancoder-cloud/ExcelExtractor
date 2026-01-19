@@ -141,26 +141,26 @@ const SignupPage = () => {
   }
   return (
     <div className="flex min-h-screen justify-center items-center bg-gray-100 p-4 sm:p-0">
-      <div className="relative w-full sm:w-[400px] bg-white h-auto sm:h-[1050px] shadow-orange-500 shadow-lg rounded-lg border-4 border-dashed border-orange-500 flex flex-col items-center pt-16">
+      <div className="relative w-full sm:w-[400px] bg-white h-auto sm:h-[1050px] shadow-orange-500 shadow-lg rounded-lg border-4 border-dashed border-orange-500 flex flex-col items-center pt-16 pb-6 sm:pb-0">
 
-        <FaUserAstronaut className="text-7xl text-white bg-orange-400 rounded-full absolute -top-10 p-3" />
+        <FaUserAstronaut className="text-4xl sm:text-7xl text-white bg-orange-400 rounded-full absolute -top-8 sm:-top-10 p-2 sm:p-3" />
 
-        <h1 className="text-3xl font-semibold text-orange-500 mb-6">
+        <h1 className="text-xl sm:text-3xl font-semibold text-orange-500 mb-4 sm:mb-6 mt-2">
           SIGN UP
         </h1>
 
         {error && (
-          <div className="w-full px-8 mb-4">
-            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-3 rounded">
-              <p className="text-sm">{error}</p>
+          <div className="w-full px-4 sm:px-8 mb-4">
+            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-2 sm:p-3 rounded">
+              <p className="text-xs sm:text-sm">{error}</p>
             </div>
           </div>
         )}
 
-        <form className="w-full px-8 space-y-4" onSubmit={handleSubmit}>
+        <form className="w-full px-4 sm:px-8 space-y-3 sm:space-y-4" onSubmit={handleSubmit}>
 
           <div>
-            <label htmlFor="name" className="text-orange-500 font-bold text-xl">
+            <label htmlFor="name" className="text-orange-500 font-bold text-sm sm:text-xl">
               Full Name
             </label>
             <input
@@ -180,7 +180,7 @@ const SignupPage = () => {
           </div>
 
           <div>
-            <label htmlFor="email" className="text-orange-500 font-bold text-xl">
+            <label htmlFor="email" className="text-orange-500 font-bold text-sm sm:text-xl">
               Email
             </label>
             <input
@@ -190,18 +190,18 @@ const SignupPage = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="example@gmail.com"
-              className="w-full border-2 rounded-lg px-4 py-2 mt-2"
+              className="w-full border-2 rounded-lg px-3 sm:px-4 py-1.5 sm:py-2 mt-2 text-sm sm:text-base"
               required
             />
             {
               errors.email &&(
-                <p className="text-red-400">{errors.email}</p>
+                <p className="text-red-400 text-xs sm:text-sm">{errors.email}</p>
               )
             }
           </div>
 
           <div className="relative">
-            <label htmlFor="password" className="text-orange-500 font-bold text-xl">
+            <label htmlFor="password" className="text-orange-500 font-bold text-sm sm:text-xl">
               Password
             </label>
             <input
@@ -210,26 +210,26 @@ const SignupPage = () => {
               name="password"
               onChange={handleChange}
               type={hidePassword ? "password" : "text"}
-              className="w-full border-2 rounded-lg px-4 py-2 mt-2"
+              className="w-full border-2 rounded-lg px-3 sm:px-4 py-1.5 sm:py-2 mt-2 text-sm sm:text-base"
             />
             {
               errors.password && (
-                <p className="text-red-400">{errors.password}</p>
+                <p className="text-red-400 text-xs sm:text-sm">{errors.password}</p>
               )
             }
             <button
               type="button"
               onClick={() => setHidePassword(!hidePassword)}
-              className="absolute right-4 top-15 -translate-y-1/2 text-xl cursor-pointer"
+              className="absolute right-3 sm:right-4 top-15 -translate-y-1/2 text-lg sm:text-xl cursor-pointer"
             >
               {hidePassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
 
           <div className="relative">
-            <label htmlFor="confirmPassword" className="text-orange-500 font-bold text-xl">
+            <label htmlFor="confirmPassword" className="text-orange-500 font-bold text-sm sm:text-xl">
               Confirm Password
-           </label >
+           </label>
             <input
 
               id="confirmPassword"
@@ -237,18 +237,18 @@ const SignupPage = () => {
               onChange={handleChange}
               name="confirmPassword"
               type={hideConfirmPassword ? "password" : "text"}
-              className="w-full border-2 rounded-lg px-4 py-2 mt-2"
+              className="w-full border-2 rounded-lg px-3 sm:px-4 py-1.5 sm:py-2 mt-2 text-sm sm:text-base"
             />
             {
               errors.confirmPassword &&
               (
-                <p className="text-red-400">{errors.confirmPassword}</p>
+                <p className="text-red-400 text-xs sm:text-sm">{errors.confirmPassword}</p>
               )
             }
             <button
               type="button"
               onClick={() => setHideConfirmPassword(!hideConfirmPassword)}
-              className="absolute right-4 top-15 -translate-y-1/2 text-xl cursor-pointer"
+              className="absolute right-3 sm:right-4 top-15 -translate-y-1/2 text-lg sm:text-xl cursor-pointer"
             >
               {hideConfirmPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
@@ -258,13 +258,13 @@ const SignupPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="flex justify-center items-center gap-3 w-full bg-orange-500 py-3 rounded-lg text-xl text-white hover:bg-orange-400 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="flex justify-center items-center gap-2 sm:gap-3 w-full bg-orange-500 py-2 sm:py-3 rounded-lg text-sm sm:text-xl text-white hover:bg-orange-400 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            {loading ? 'Creating Account...' : 'Sign Up'} <PiUserPlus />
+            {loading ? 'Creating Account...' : 'Sign Up'} <PiUserPlus className="text-base sm:text-xl" />
           </button>
         </form>
 
-        <p className="mt-4">
+        <p className="mt-3 sm:mt-4 px-2 text-center text-xs sm:text-base">
           Already have an account?{" "}
           <a href="/login" className="text-blue-500 font-semibold cursor-pointer ">
             Login
@@ -275,9 +275,9 @@ const SignupPage = () => {
           type="button"
           onClick={() => googleLogin()}
           disabled={loading}
-          className="flex items-center justify-center gap-3 border-2 w-[85%] py-2 rounded-lg mt-4 hover:bg-gray-100 disabled:bg-gray-200 disabled:cursor-not-allowed"
+          className="flex items-center justify-center gap-2 sm:gap-3 border-2 w-[90%] sm:w-[85%] py-2 sm:py-2.5 rounded-lg mt-3 sm:mt-4 hover:bg-gray-100 disabled:bg-gray-200 disabled:cursor-not-allowed text-xs sm:text-base"
         >
-          <FcGoogle className="text-2xl" />
+          <FcGoogle className="text-lg sm:text-2xl" />
           <span className="font-semibold">Continue with Google</span>
         </button>
 

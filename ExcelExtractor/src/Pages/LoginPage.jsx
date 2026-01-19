@@ -147,26 +147,26 @@ const LoginPage = () => {
  
   return (
     <div className="flex min-h-screen justify-center items-center bg-gray-100 p-4 sm:p-0">
-      <div className={`relative w-full sm:w-[400px] bg-white shadow-orange-500 shadow-lg rounded-lg border-4 border-dashed border-orange-500 flex flex-col items-center pt-16 ${isSignup ? 'sm:h-[850px]' : 'sm:h-[600px]'}`}>
+      <div className={`relative w-full sm:w-[400px] bg-white shadow-orange-500 shadow-lg rounded-lg border-4 border-dashed border-orange-500 flex flex-col items-center pt-16 pb-6 sm:pb-0 ${isSignup ? 'sm:h-[850px]' : 'sm:h-[600px]'}`}>
 
-        <FaUserAstronaut className="text-7xl text-white bg-orange-400 rounded-full absolute -top-10 p-3" />
+        <FaUserAstronaut className="text-4xl sm:text-7xl text-white bg-orange-400 rounded-full absolute -top-8 sm:-top-10 p-2 sm:p-3" />
 
-        <h1 className="text-3xl font-semibold text-orange-500 mb-6">
+        <h1 className="text-xl sm:text-3xl font-semibold text-orange-500 mb-4 sm:mb-6">
           {isSignup ? 'SIGN UP' : 'LOGIN'}
         </h1>
 
         {error && (
-          <div className="w-full px-8 mb-4">
-            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-3 rounded">
-              <p className="text-sm">{error}</p>
+          <div className="w-full px-4 sm:px-8 mb-4">
+            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-2 sm:p-3 rounded">
+              <p className="text-xs sm:text-sm">{error}</p>
             </div>
           </div>
         )}
 
-        <form className="w-full px-8 space-y-5" onSubmit={handleSubmit}>
+        <form className="w-full px-4 sm:px-8 space-y-3 sm:space-y-5" onSubmit={handleSubmit}>
           {isSignup && (
             <div>
-              <label htmlFor="fullName" className="text-orange-500 font-bold text-xl">
+              <label htmlFor="fullName" className="text-orange-500 font-bold text-sm sm:text-xl">
                 Full Name
               </label>
               <input
@@ -177,18 +177,18 @@ const LoginPage = () => {
                 onChange={handleChange}
                 placeholder="Enter your full name"
                 autoComplete="name"
-                className="w-full border-2 rounded-lg px-4 py-2 mt-2"
+                className="w-full border-2 rounded-lg px-3 sm:px-4 py-1.5 sm:py-2 mt-2 text-sm sm:text-base"
               />
               {
                 errors.fullName &&(
-                  <p className="text-red-500">{errors.fullName}</p>
+                  <p className="text-red-500 text-xs sm:text-sm">{errors.fullName}</p>
                 )
               }
             </div>
           )}
 
           <div>
-            <label htmlFor="email" className="text-orange-500 font-bold text-xl">
+            <label htmlFor="email" className="text-orange-500 font-bold text-sm sm:text-xl">
               Email
             </label>
             <input
@@ -199,22 +199,22 @@ const LoginPage = () => {
               onChange={handleChange}
               placeholder="example@gmail.com"
               autoComplete="email"
-              className="w-full border-2 rounded-lg px-4 py-2 mt-2"
+              className="w-full border-2 rounded-lg px-3 sm:px-4 py-1.5 sm:py-2 mt-2 text-sm sm:text-base"
             />
             {
               errors.email &&(
-                <p className="text-red-500">{errors.email}</p>
+                <p className="text-red-500 text-xs sm:text-sm">{errors.email}</p>
               )
             }
           </div>
 
           <div className="relative">
             <div className="flex justify-between items-center mb-2">
-              <label htmlFor="password" className="text-orange-500 font-bold text-xl">
+              <label htmlFor="password" className="text-orange-500 font-bold text-sm sm:text-xl">
                 Password
               </label>
               {!isSignup && (
-                <Link to="/forgot-password" className="text-blue-500 font-semibold hover:underline text-sm">
+                <Link to="/forgot-password" className="text-blue-500 font-semibold hover:underline text-xs sm:text-sm">
                   Forgot Password?
                 </Link>
               )}
@@ -226,17 +226,17 @@ const LoginPage = () => {
               onChange={handleChange}
               type={hidePassword ? "password" : "text"}
               autoComplete="current-password"
-              className="w-full border-2 rounded-lg px-4 py-2 mt-2"
+              className="w-full border-2 rounded-lg px-3 sm:px-4 py-1.5 sm:py-2 mt-2 text-sm sm:text-base"
             />
             {
               errors.password&&(
-                <p className="text-red-400">{errors.password}</p>
+                <p className="text-red-400 text-xs sm:text-sm">{errors.password}</p>
               )
             }
             <button
               type="button"
               onClick={() => setHidePassword(!hidePassword)}
-              className="absolute right-4 top-15 -translate-y-1/2 text-xl cursor-pointer"
+              className="absolute right-3 sm:right-4 top-15 -translate-y-1/2 text-lg sm:text-xl cursor-pointer"
             >
               {hidePassword ? <FaEyeSlash /> : <FaEye />}
             </button>
@@ -244,7 +244,7 @@ const LoginPage = () => {
 
           {isSignup && (
             <div className="relative">
-              <label htmlFor="confirmPassword" className="text-orange-500 font-bold text-xl">
+              <label htmlFor="confirmPassword" className="text-orange-500 font-bold text-sm sm:text-xl">
                 Confirm Password
               </label>
               <input
@@ -254,17 +254,17 @@ const LoginPage = () => {
                 onChange={handleChange}
                 type={hideConfirmPassword ? "password" : "text"}
                 autoComplete="new-password"
-                className="w-full border-2 rounded-lg px-4 py-2 mt-2"
+                className="w-full border-2 rounded-lg px-3 sm:px-4 py-1.5 sm:py-2 mt-2 text-sm sm:text-base"
               />
               {
                 errors.confirmPassword&&(
-                  <p className="text-red-400">{errors.confirmPassword}</p>
+                  <p className="text-red-400 text-xs sm:text-sm">{errors.confirmPassword}</p>
                 )
               }
               <button
                 type="button"
                 onClick={() => setHideConfirmPassword(!hideConfirmPassword)}
-                className="absolute right-4 top-15 -translate-y-1/2 text-xl cursor-pointer"
+                className="absolute right-3 sm:right-4 top-15 -translate-y-1/2 text-lg sm:text-xl cursor-pointer"
               >
                 {hideConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
@@ -274,13 +274,13 @@ const LoginPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="flex justify-center items-center gap-3 w-full bg-orange-500 py-3 rounded-lg text-xl text-white hover:bg-orange-400 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="flex justify-center items-center gap-2 sm:gap-3 w-full bg-orange-500 py-2 sm:py-3 rounded-lg text-sm sm:text-xl text-white hover:bg-orange-400 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            {loading ? (isSignup ? 'Creating Account...' : 'Logging in...') : (isSignup ? 'Sign Up' : 'Login')} {isSignup ? <PiUserPlus /> : <PiSignIn />}
+            {loading ? (isSignup ? 'Creating Account...' : 'Logging in...') : (isSignup ? 'Sign Up' : 'Login')} {isSignup ? <PiUserPlus className="text-base sm:text-xl" /> : <PiSignIn className="text-base sm:text-xl" />}
           </button>
         </form>
 
-        <p className="mt-4 text-center">
+        <p className="mt-3 sm:mt-4 text-center px-2 text-xs sm:text-base">
           {isSignup ? 'Already have an account?' : "Don't have an account?"}{" "}
           <button 
             onClick={() => {
@@ -304,9 +304,9 @@ const LoginPage = () => {
           type="button"
           onClick={() => googleLogin()}
           disabled={loading}
-          className="flex items-center justify-center gap-3 border-2 w-[85%] py-2 rounded-lg mt-4 hover:bg-gray-100 disabled:bg-gray-200 disabled:cursor-not-allowed"
+          className="flex items-center justify-center gap-2 sm:gap-3 border-2 w-[90%] sm:w-[85%] py-2 sm:py-2.5 rounded-lg mt-3 sm:mt-4 hover:bg-gray-100 disabled:bg-gray-200 disabled:cursor-not-allowed text-xs sm:text-base"
         >
-          <FcGoogle className="text-2xl" />
+          <FcGoogle className="text-lg sm:text-2xl" />
           <span className="font-semibold">Continue with Google</span>
         </button>
 

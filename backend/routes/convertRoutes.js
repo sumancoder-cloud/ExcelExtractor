@@ -168,13 +168,6 @@ router.get('/download/:fileName', protect, (req, res) => {
         console.error('Download error:', err);
       } else {
         console.log('File downloaded:', fileName);
-        // Clean up file after download
-        setTimeout(() => {
-          if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
-            console.log('File cleaned up:', fileName);
-          }
-        }, 5000);
       }
     });
   } catch (error) {

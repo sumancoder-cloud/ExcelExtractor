@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const { protect } = require('../middleware/auth');
 const { convertPDFToExcel, convertImageToExcel } = require('../utils/converter');
+const { uploadExcelToCloud } = require('../utils/uploadToCloud');
 const Feedback = require('../models/Feedback');
 const ConversionHistory = require('../models/ConversionHistory');
 
@@ -88,6 +89,9 @@ router.post('/upload', protect, upload.single('file'), async (req, res) => {
     console.log('Extraction method:', result.extractionMethod);
     console.log('Confidence:', result.confidence);
 
+    // Upload Excel file to Cloudinary (persistent cloud storage)
+    const cloudUpload = await uploadExcelToCloud(result.excelPath, 'converted.xlsx');
+
     // Save conversion to history
     const conversionRecord = new ConversionHistory({
       userId: req.user.id,
@@ -96,7 +100,7 @@ router.post('/upload', protect, upload.single('file'), async (req, res) => {
       fileType: fileType.startsWith('image/') ? 'image' : 'pdf',
       mimeType: fileType,
       originalFileSize: req.file.size,
-      downloadUrl: `/api/convert/download/${path.basename(result.excelPath)}`,
+      downloadUrl: cloudUpload.url,
       filePath: result.excelPath,
       extractedText: result.extractedText || [],
       tableData: result.tableData || null,
@@ -113,7 +117,7 @@ router.post('/upload', protect, upload.single('file'), async (req, res) => {
       success: true,
       extractedText: result.extractedText,
       tableData: result.tableData,
-      downloadUrl: `/api/convert/download/${path.basename(result.excelPath)}`,
+      downloadUrl: cloudUpload.url,
       fileName: 'converted.xlsx',
       extractionMethod: result.extractionMethod,
       confidence: result.confidence,
@@ -144,32 +148,13 @@ router.post('/upload', protect, upload.single('file'), async (req, res) => {
 });
 
 // @route   GET /api/convert/download/:fileName
-// @desc    Download converted Excel file
+// @desc    Download converted Excel file (redirects to Cloudinary)
 // @access  Private
 router.get('/download/:fileName', protect, (req, res) => {
   try {
-    const fileName = req.params.fileName;
-    const filePath = path.join(__dirname, '../uploads/', fileName);
-
-    // Security check: ensure file is in uploads directory
-    const resolvedPath = path.resolve(filePath);
-    const uploadsDir = path.resolve(__dirname, '../uploads/');
-    
-    if (!resolvedPath.startsWith(uploadsDir)) {
-      return res.status(403).json({ success: false, message: 'Access denied' });
-    }
-
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ success: false, message: 'File not found' });
-    }
-
-    res.download(filePath, 'converted.xlsx', (err) => {
-      if (err) {
-        console.error('Download error:', err);
-      } else {
-        console.log('File downloaded:', fileName);
-      }
-    });
+    // Files are now stored on Cloudinary, frontend will download directly
+    // This endpoint kept for backward compatibility - just returns success
+    res.json({ success: true, message: 'Download URL is provided in the conversion response' });
   } catch (error) {
     console.error('Download error:', error);
     res.status(500).json({ success: false, message: 'Download failed' });

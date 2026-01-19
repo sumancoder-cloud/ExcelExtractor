@@ -19,8 +19,9 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { loginUser } = useAuth();
 
-  // Google OAuth login
+  // Google OAuth login with implicit flow to avoid redirect_uri_mismatch
   const googleLogin = useGoogleLogin({
+    flow: 'implicit',
     onSuccess: async (tokenResponse) => {
       try {
         setError('');
@@ -39,7 +40,6 @@ const LoginPage = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          credentials: 'include',
           credentials: 'include',
           body: JSON.stringify({
             googleId: userInfo.id,

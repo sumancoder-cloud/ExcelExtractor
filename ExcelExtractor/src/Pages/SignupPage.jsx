@@ -18,6 +18,7 @@ const SignupPage = () => {
 
   // Google OAuth login
   const googleLogin = useGoogleLogin({
+    flow: 'implicit',
     onSuccess: async (tokenResponse) => {
       try {
         setError('');
@@ -36,7 +37,6 @@ const SignupPage = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          credentials: 'include',
           credentials: 'include',
           body: JSON.stringify({
             googleId: userInfo.id,

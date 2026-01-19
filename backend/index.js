@@ -31,6 +31,16 @@ const corsOptions = {
       return callback(null, true);
     }
 
+    // Allow production frontend domain
+    if (origin === 'https://skillful-rebirth-production-c2fc.up.railway.app') {
+      return callback(null, true);
+    }
+
+    // Allow other Railway domains
+    if (origin.match(/^https:\/\/.*\.up\.railway\.app$/)) {
+      return callback(null, true);
+    }
+
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,

@@ -191,16 +191,37 @@ const MainPage = () => {
         }
     };
 
-    const handleDownload = (index) => {
+    const handleDownload = async (index) => {
         if (!convertedFiles[index]) return;
         
-        const convertedFile = convertedFiles[index];
-        const link = document.createElement('a');
-        link.href = convertedFile.url;
-        link.setAttribute('download', convertedFile.name);
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode.removeChild(link);
+        try {
+            const convertedFile = convertedFiles[index];
+            const token = localStorage.getItem('token');
+            
+            const response = await fetch(convertedFile.url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            
+            if (!response.ok) {
+                alert('Download failed. Please try again.');
+                return;
+            }
+            
+            const blob = await response.blob();
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', convertedFile.name);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(link.href);
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('Download failed. Please try again.');
+        }
     };
 
     const handleRemoveFile = (index) => {

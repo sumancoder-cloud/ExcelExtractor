@@ -141,9 +141,9 @@ const SignupPage = () => {
   }
   return (
     <div className="flex min-h-screen justify-center items-center bg-gray-100 p-4 sm:p-0">
-      <div className="relative w-full sm:w-[400px] bg-white h-auto sm:h-[1050px] shadow-orange-500 shadow-lg rounded-lg border-4 border-dashed border-orange-500 flex flex-col items-center pt-16 pb-6 sm:pb-0">
+      <div className="relative w-full sm:w-[400px] bg-white min-h-[700px] sm:min-h-[950px] shadow-orange-500 shadow-lg rounded-lg border-4 border-dashed border-orange-500 flex flex-col items-center pt-12 sm:pt-16">
 
-        <FaUserAstronaut className="text-4xl sm:text-7xl text-white bg-orange-400 rounded-full absolute -top-8 sm:-top-10 p-2 sm:p-3" />
+        <FaUserAstronaut className="text-6xl sm:text-7xl text-white bg-orange-400 rounded-full absolute -top-6 sm:-top-10 p-2.5 sm:p-3" />
 
         <h1 className="text-xl sm:text-3xl font-semibold text-orange-500 mb-4 sm:mb-6 mt-2">
           SIGN UP
@@ -248,7 +248,7 @@ const SignupPage = () => {
             <button
               type="button"
               onClick={() => setHideConfirmPassword(!hideConfirmPassword)}
-              className="absolute right-3 sm:right-4 top-15 -translate-y-1/2 text-lg sm:text-xl cursor-pointer"
+              className="absolute right-3 sm:right-4 top-[50px] text-lg sm:text-xl cursor-pointer"
             >
               {hideConfirmPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
@@ -275,7 +275,7 @@ const SignupPage = () => {
           type="button"
           onClick={() => googleLogin()}
           disabled={loading}
-          className="flex items-center justify-center gap-2 sm:gap-3 border-2 w-[90%] sm:w-[85%] py-2 sm:py-2.5 rounded-lg mt-3 sm:mt-4 hover:bg-gray-100 disabled:bg-gray-200 disabled:cursor-not-allowed text-xs sm:text-base"
+          className="flex items-center justify-center gap-2 sm:gap-3 border-2 w-[90%] sm:w-[85%] py-2 sm:py-2.5 rounded-lg mt-2 sm:mt-4 hover:bg-gray-100 disabled:bg-gray-200 disabled:cursor-not-allowed text-xs sm:text-base"
         >
           <FcGoogle className="text-lg sm:text-2xl" />
           <span className="font-semibold">Continue with Google</span>

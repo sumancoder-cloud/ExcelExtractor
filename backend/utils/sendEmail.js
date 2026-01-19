@@ -6,11 +6,15 @@ const sendEmailWithOTP = async (email, otp) => {
     // For Gmail, you need to use an app-specific password
     // See: https://myaccount.google.com/apppasswords
     
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+      throw new Error('Email credentials not configured. Please set EMAIL_USER and EMAIL_PASSWORD environment variables.');
+    }
+    
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER || 'sumanyadav_tati@srmap.edu.in',
-        pass: process.env.EMAIL_PASSWORD || 'lqwicvuabzcqwrwr'
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD
       }
     });
 
@@ -71,11 +75,15 @@ const sendEmailWithOTP = async (email, otp) => {
 // Keep the old function for other email types if needed
 const sendEmail = async (email, subject, resetUrl) => {
   try {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+      throw new Error('Email credentials not configured. Please set EMAIL_USER and EMAIL_PASSWORD environment variables.');
+    }
+    
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER || 'sumanyadav_tati@srmap.edu.in',
-        pass: process.env.EMAIL_PASSWORD || 'lqwicvuabzcqwrwr'
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD
       }
     });
 

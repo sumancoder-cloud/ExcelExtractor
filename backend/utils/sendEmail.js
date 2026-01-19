@@ -1,7 +1,5 @@
 const { Resend } = require('resend');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const sendEmailWithOTP = async (email, otp) => {
   try {
     if (!process.env.RESEND_API_KEY) {
@@ -9,6 +7,8 @@ const sendEmailWithOTP = async (email, otp) => {
       console.log(`[FALLBACK] OTP for ${email}: ${otp}`);
       return true;
     }
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     // Email content with OTP
     const htmlContent = `

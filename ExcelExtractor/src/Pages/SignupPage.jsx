@@ -37,6 +37,7 @@ const SignupPage = () => {
             'Content-Type': 'application/json',
           },
           credentials: 'include',
+          credentials: 'include',
           body: JSON.stringify({
             googleId: userInfo.id,
             email: userInfo.email,

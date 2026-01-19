@@ -36,7 +36,8 @@ const ProfilePage = () => {
       const response = await fetch(`${API_URL}/api/auth/profile`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+        },
+        credentials: 'include'
       });
 
       const data = await response.json();
@@ -68,6 +69,7 @@ const ProfilePage = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
+        credentials: 'include',
         body: JSON.stringify({ fullName, email })
       });
 
@@ -116,6 +118,7 @@ const ProfilePage = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
+        credentials: 'include',
         body: JSON.stringify({ currentPassword, newPassword, confirmPassword })
       });
 

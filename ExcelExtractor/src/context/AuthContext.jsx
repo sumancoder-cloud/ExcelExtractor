@@ -39,6 +39,7 @@ export const AuthProvider = ({ children }) => {
           'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
       });
 
       if (response.ok) {

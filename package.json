@@ -4,11 +4,12 @@
   "description": "wanna explore everything",
   "main": "index.js",
   "scripts": {
-    "start": "start.bat",
-    "stop": "stop.bat",
+    "start": "cd backend && npm start",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd ExcelExtractor && npm run dev\"",
     "install:all": "npm install --prefix backend && npm install --prefix ExcelExtractor",
     "dev:backend": "npm run dev --prefix backend",
-    "dev:frontend": "npm run dev --prefix ExcelExtractor"
+    "dev:frontend": "npm run dev --prefix ExcelExtractor",
+    "build": "npm install --prefix ExcelExtractor && npm run build --prefix ExcelExtractor"
   },
   "repository": {
     "type": "git",

@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 
 const sendEmailWithOTP = async (email, otp) => {
   try {
-    // Create a transporter using Gmail (or your email provider)
+    // Create a transporter using Gmail with optimized settings for reliability
     // For Gmail, you need to use an app-specific password
     // See: https://myaccount.google.com/apppasswords
     
@@ -13,10 +13,17 @@ const sendEmailWithOTP = async (email, otp) => {
     }
     
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD
+      },
+      connectionTimeout: 10000,
+      socketTimeout: 10000,
+      tls: {
+        rejectUnauthorized: false
       }
     });
 
@@ -64,13 +71,31 @@ const sendEmailWithOTP = async (email, otp) => {
       html: htmlContent
     };
 
-    // Send email
-    await transporter.sendMail(mailOptions);
-    console.log(`OTP email sent successfully to ${email}`);
+    // Send email with retry logic
+    let lastError;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        console.log(`Sending OTP email to ${email} (Attempt ${attempt}/3)...`);
+        await transporter.sendMail(mailOptions);
+        console.log(`✅ OTP email sent successfully to ${email}`);
+        return true;
+      } catch (attemptError) {
+        lastError = attemptError;
+        console.warn(`❌ Attempt ${attempt} failed:`, attemptError.message);
+        if (attempt < 3) {
+          // Wait before retrying (exponential backoff: 2s, 4s)
+          await new Promise(resolve => setTimeout(resolve, attempt * 2000));
+        }
+      }
+    }
+    
+    // If all retries failed, log and continue (don't break the flow)
+    console.error('Email sending failed after 3 attempts:', lastError?.message);
+    console.log(`[FALLBACK] OTP for ${email}: ${otp}`);
     return true;
   } catch (error) {
-    console.error('Email sending error:', error);
-    console.log(`[DEV MODE] OTP for ${email}: ${otp}`);
+    console.error('Email sending error:', error.message);
+    console.log(`[FALLBACK] OTP for ${email}: ${otp}`);
     return true; // Don't fail the request if email fails
   }
 };
@@ -84,10 +109,17 @@ const sendEmail = async (email, subject, resetUrl) => {
     }
     
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD
+      },
+      connectionTimeout: 10000,
+      socketTimeout: 10000,
+      tls: {
+        rejectUnauthorized: false
       }
     });
 
@@ -127,8 +159,25 @@ const sendEmail = async (email, subject, resetUrl) => {
       html: htmlContent
     };
 
-    await transporter.sendMail(mailOptions);
-    console.log(`Email sent successfully to ${email}`);
+    // Send email with retry logic
+    let lastError;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        console.log(`Sending email to ${email} (Attempt ${attempt}/3)...`);
+        await transporter.sendMail(mailOptions);
+        console.log(`✅ Email sent successfully to ${email}`);
+        return true;
+      } catch (attemptError) {
+        lastError = attemptError;
+        console.warn(`❌ Attempt ${attempt} failed:`, attemptError.message);
+        if (attempt < 3) {
+          await new Promise(resolve => setTimeout(resolve, attempt * 2000));
+        }
+      }
+    }
+    
+    // If all retries failed, still return true (don't block the flow)
+    console.error('Email sending failed after 3 attempts:', lastError?.message);
     return true;
   } catch (error) {
     console.error('Email sending error:', error);

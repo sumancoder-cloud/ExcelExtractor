@@ -15,6 +15,13 @@ const uploadExcelToCloud = async (filePath, fileName) => {
       return { url: `/api/convert/download/${fileName}` };
     }
 
+    console.log('Starting Cloudinary upload for:', filePath);
+    console.log('Cloudinary config:', {
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? '✓ set' : '✗ missing',
+      api_key: process.env.CLOUDINARY_API_KEY ? '✓ set' : '✗ missing',
+      api_secret: process.env.CLOUDINARY_API_SECRET ? '✓ set' : '✗ missing',
+    });
+
     // Upload file to Cloudinary
     const result = await cloudinary.uploader.upload(filePath, {
       resource_type: 'auto',
@@ -23,12 +30,12 @@ const uploadExcelToCloud = async (filePath, fileName) => {
       overwrite: false,
     });
 
-    console.log('File uploaded to Cloudinary:', result.secure_url);
+    console.log('✓ File uploaded to Cloudinary:', result.secure_url);
 
     // Delete local file after cloud upload
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
-      console.log('Local file deleted:', filePath);
+      console.log('✓ Local file deleted:', filePath);
     }
 
     return {
@@ -36,8 +43,10 @@ const uploadExcelToCloud = async (filePath, fileName) => {
       cloudinaryId: result.public_id,
     };
   } catch (error) {
-    console.error('Cloudinary upload error:', error.message);
+    console.error('✗ Cloudinary upload error:', error.message);
+    console.error('Error details:', error);
     // Fallback to local storage if cloud fails
+    console.log('Falling back to local storage');
     return { url: `/api/convert/download/${fileName}` };
   }
 };

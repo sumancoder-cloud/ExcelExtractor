@@ -196,8 +196,21 @@ const MainPage = () => {
         
         try {
             const convertedFile = convertedFiles[index];
-            const token = localStorage.getItem('token');
             
+            // If URL is a Cloudinary URL, download directly (simpler approach)
+            if (convertedFile.url.includes('cloudinary')) {
+                const link = document.createElement('a');
+                link.href = convertedFile.url;
+                link.setAttribute('download', convertedFile.name);
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                link.parentNode.removeChild(link);
+                return;
+            }
+            
+            // Fallback for local/backend URLs
+            const token = localStorage.getItem('token');
             const response = await fetch(convertedFile.url, {
                 method: 'GET',
                 headers: {

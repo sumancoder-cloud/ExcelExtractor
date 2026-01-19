@@ -174,7 +174,7 @@ router.get('/download/:fileName', protect, (req, res) => {
             fs.unlinkSync(filePath);
             console.log('File cleaned up:', fileName);
           }
-        }, 1000);
+        }, 5000);
       }
     });
   } catch (error) {

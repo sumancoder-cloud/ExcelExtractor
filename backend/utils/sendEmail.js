@@ -48,7 +48,7 @@ const sendEmailWithOTP = async (email, otp) => {
     `;
 
     const mailOptions = {
-      from: 'noreply@excelextractor.com',
+      from: 'onboarding@resend.dev',
       to: email,
       subject: 'Password Reset Verification Code',
       html: htmlContent
@@ -125,7 +125,7 @@ const sendEmail = async (email, subject, resetUrl) => {
     `;
 
     const mailOptions = {
-      from: 'noreply@excelextractor.com',
+      from: 'onboarding@resend.dev',
       to: email,
       subject: subject,
       html: htmlContent

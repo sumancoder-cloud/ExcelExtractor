@@ -2,6 +2,9 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const AuthContext = createContext();
 
+// Get API URL from environment variable
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -30,7 +33,7 @@ export const AuthProvider = ({ children }) => {
   // Function to validate token with server
   const validateToken = async (authToken) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/validate', {
+      const response = await fetch(`${API_URL}/api/auth/validate`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${authToken}`,

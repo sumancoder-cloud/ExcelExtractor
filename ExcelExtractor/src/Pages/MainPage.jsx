@@ -512,48 +512,6 @@ const MainPage = () => {
             </div>
         )}
 
-        {/* Extracted Text Preview */}
-        {convertedFiles.length > 0 && convertedFiles.some(file => file.extractedText && file.extractedText.length > 0) && (
-            <div className="flex justify-center px-4 mt-6">
-                <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-6 w-full max-w-[800px] shadow-md">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">📄 Extracted Text Preview</h3>
-                    <div className="space-y-3">
-                        {convertedFiles.map((file, fileIndex) => (
-                            file.extractedText && file.extractedText.length > 0 && (
-                                <div key={fileIndex} className="bg-white p-4 rounded border border-blue-200">
-                                    <h4 className="text-sm font-semibold text-gray-700 mb-2 text-center">
-                                        From: {file.originalName}
-                                    </h4>
-                                    <div className="flex justify-between items-center mb-2 text-xs text-gray-600">
-                                        <span>🎯 Method: {file.extractionMethod || 'Basic'}</span>
-                                        <span>📊 Confidence: {file.confidence ? (file.confidence * 100).toFixed(0) + '%' : 'N/A'}</span>
-                                    </div>
-                                    <div className="text-center">
-                                        <ul className="inline-block text-left space-y-1">
-                                            {file.extractedText.slice(0, 15).map((line, lineIndex) => (
-                                                <li key={lineIndex} className="flex items-start">
-                                                    <span className="text-blue-500 mr-2">•</span>
-                                                    <span className="text-gray-800 text-sm leading-relaxed">{line}</span>
-                                                </li>
-                                            ))}
-                                            {file.extractedText.length > 15 && (
-                                                <li className="text-gray-500 text-xs italic mt-2">
-                                                    ... and {file.extractedText.length - 15} more lines
-                                                </li>
-                                            )}
-                                        </ul>
-                                    </div>
-                                </div>
-                            )
-                        ))}
-                    </div>
-                    <p className="text-center text-xs text-gray-500 mt-3">
-                        💡 This preview shows the extracted text. Download the Excel file for the complete structured data.
-                    </p>
-                </div>
-            </div>
-        )}
-
         <div className="flex justify-center px-4 mt-10">
             <div className="flex justify-center items-center bg-orange-500 w-full max-w-[800px] h-[250px] md:h-[350px] border-dashed border-white border-10 outline outline-orange rounded-4xl">
                 <div className="flex flex-col bg-white w-full max-w-md py-8 sm:px-6 sm:py-4 justify-center">

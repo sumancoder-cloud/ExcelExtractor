@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faDownload, faEye, faTrash, faFileExcel, faFilePdf, faImage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const ConversionHistoryPage = () => {
   const navigate = useNavigate();
   const [conversions, setConversions] = useState([]);
@@ -20,7 +22,7 @@ const ConversionHistoryPage = () => {
   const fetchConversions = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:5000/api/convert/history?page=${page}&limit=10`, {
+      const response = await fetch(`${API_URL}/api/convert/history?page=${page}&limit=10`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -44,7 +46,7 @@ const ConversionHistoryPage = () => {
 
   const handleDownload = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/convert/download-history/${id}`, {
+      const response = await fetch(`${API_URL}/api/convert/download-history/${id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

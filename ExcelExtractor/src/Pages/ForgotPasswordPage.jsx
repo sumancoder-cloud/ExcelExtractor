@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
@@ -26,7 +28,7 @@ const ForgotPasswordPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
+      const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { signup } from '../api';
 import { useGoogleLogin } from '@react-oauth/google';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const SignupPage = () => {
   const [hidePassword, setHidePassword] = useState(true);
   const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
@@ -29,7 +31,7 @@ const SignupPage = () => {
         const userInfo = await userInfoResponse.json();
         
         // Send to backend for authentication
-        const response = await fetch('http://localhost:5000/api/auth/google-login', {
+        const response = await fetch(`${API_URL}/api/auth/google-login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

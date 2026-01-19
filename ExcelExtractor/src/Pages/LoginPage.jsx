@@ -146,8 +146,8 @@ const LoginPage = () => {
 
  
   return (
-    <div className="flex min-h-screen justify-center items-center bg-gray-100">
-      <div className={`relative w-[400px] bg-white shadow-orange-500 shadow-lg rounded-lg border-4 border-dashed border-orange-500 flex flex-col items-center pt-16 ${isSignup ? 'h-[850px]' : 'h-[600px]'}`}>
+    <div className="flex min-h-screen justify-center items-center bg-gray-100 p-4 sm:p-0">
+      <div className={`relative w-full sm:w-[400px] bg-white shadow-orange-500 shadow-lg rounded-lg border-4 border-dashed border-orange-500 flex flex-col items-center pt-16 ${isSignup ? 'sm:h-[850px]' : 'sm:h-[600px]'}`}>
 
         <FaUserAstronaut className="text-7xl text-white bg-orange-400 rounded-full absolute -top-10 p-3" />
 

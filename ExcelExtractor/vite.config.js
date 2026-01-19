@@ -13,4 +13,11 @@ export default defineConfig({
       },
     },
   },
+  preview: {
+    allowedHosts: [
+      'skillful-rebirth-production-c2fc.up.railway.app',
+      'localhost',
+      '127.0.0.1',
+    ]
+  }
 })

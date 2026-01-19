@@ -72,8 +72,6 @@ const ForgotPasswordPage = () => {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({ email, otp }),
       });
 

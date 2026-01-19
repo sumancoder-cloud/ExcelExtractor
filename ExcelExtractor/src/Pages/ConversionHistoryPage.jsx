@@ -25,7 +25,8 @@ const ConversionHistoryPage = () => {
       const response = await fetch(`${API_URL}/api/convert/history?page=${page}&limit=10`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+        },
+        credentials: 'include'
       });
 
       const data = await response.json();
@@ -49,7 +50,9 @@ const ConversionHistoryPage = () => {
       const response = await fetch(`${API_URL}/api/convert/download-history/${id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+        },
+        credentials: 'include',
+        credentials: 'include'
       });
 
       if (response.ok) {
@@ -78,11 +81,12 @@ const ConversionHistoryPage = () => {
 
     try {
       setDeleting(id);
-      const response = await fetch(`http://localhost:5000/api/convert/history/${id}`, {
+      const response = await fetch(`${API_URL}/api/convert/history/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+        },
+        credentials: 'include'
       });
 
       if (response.ok) {

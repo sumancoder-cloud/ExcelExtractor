@@ -51,7 +51,6 @@ const ConversionHistoryPage = () => {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        credentials: 'include',
         credentials: 'include'
       });
 

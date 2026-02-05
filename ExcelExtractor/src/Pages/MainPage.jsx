@@ -9,7 +9,7 @@ import ConversionAnimation from '../Components/ConversionAnimation';
 import { useSecurity } from '../utils/security';
 
 const MainPage = () => {
-    const MAX_FILE_SIZE = 5 * 1024 * 1024;
+    const MAX_FILE_SIZE = 50 * 1024 * 1024;
     const [showMenu, setShowMenu] = useState(false);
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -75,7 +75,7 @@ const MainPage = () => {
         for (let file of files) {
             // Validate file size
             if (file.size > MAX_FILE_SIZE) {
-                alert(`File "${file.name}" exceeds 5MB limit. Skipping.`);
+                alert(`File "${file.name}" exceeds 50MB limit. Skipping.`);
                 continue;
             }
 
@@ -587,7 +587,7 @@ const MainPage = () => {
                                 {uploadedFiles.length > 0 ? 'Add More Files' : `Drag & drop ${uploadType === 'pdf' ? 'PDFs' : 'Images'}`}
                             </span>
                             <span className="text-xs text-gray-500 mt-1">
-                                {uploadType === 'pdf' ? '(PDF - Max 5MB each)' : '(JPG, PNG, WEBP - Max 5MB each)'}
+                                {uploadType === 'pdf' ? '(PDF - Max 50MB each)' : '(JPG, PNG, WEBP - Max 50MB each)'}
                             </span>
                             <input
                                 type="file"

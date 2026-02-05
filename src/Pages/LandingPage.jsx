@@ -5,13 +5,13 @@ import { FaHamburger } from "react-icons/fa";
 import {faUpload, faFilePdf,faFileExcel,faCalendarCheck}  from '@fortawesome/free-solid-svg-icons';
 import {Link} from "react-router-dom"
 const LandingPage=()=>{
-    const MAX_FILE_SIZE = 5 * 1024 * 1024;
+    const MAX_FILE_SIZE = 50 * 1024 * 1024;
     const handleChange=(e)=>{
         const file=e.target.files[0];
         if(!file) return;
         
         if(file.size > MAX_FILE_SIZE){
-            alert("Please Upload file Size below 5MB");
+            alert("Please Upload file Size below 50MB");
             e.target.value="";
             return;
         }

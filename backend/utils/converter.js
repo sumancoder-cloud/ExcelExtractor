@@ -3,7 +3,46 @@ const path = require('path');
 const pdf = require('pdf-parse');
 const Tesseract = require('tesseract.js');
 const XLSX = require('xlsx');
+const os = require('os');
 const MLExtractor = require('./mlExtractor');
+
+// Get Python executable path that works on both Windows and Linux
+const getPythonExecutable = () => {
+  const platformOS = os.platform();
+  
+  // On Linux/Mac: use python3 (Railway runs on Linux)
+  if (platformOS !== 'win32') {
+    console.log('🐧 Linux/Unix detected - using python3');
+    return 'python3';
+  }
+  
+  // On Windows: try multiple possible locations
+  console.log('🪟 Windows detected - searching for Python...');
+  
+  // Try common Python installation paths on Windows
+  const pythonPaths = [
+    'python',  // If Python is in PATH
+    'python3', // If Python3 is in PATH
+    `${os.homedir()}\\AppData\\Local\\Programs\\Python\\Python313\\python.exe`,
+    `${os.homedir()}\\AppData\\Local\\Programs\\Python\\Python312\\python.exe`,
+    `${os.homedir()}\\AppData\\Local\\Programs\\Python\\Python311\\python.exe`,
+    'C:\\Python313\\python.exe',
+    'C:\\Python312\\python.exe',
+    'C:\\Python311\\python.exe',
+  ];
+  
+  // For Windows, try to find an available Python
+  for (const pythonPath of pythonPaths) {
+    if (fs.existsSync(pythonPath)) {
+      console.log('✅ Found Python at:', pythonPath);
+      return pythonPath;
+    }
+  }
+  
+  // Fallback to generic 'python' if no specific path found
+  console.warn('⚠️ Could not find Python in standard locations, using generic "python"');
+  return 'python';
+};
 
 // ✅ RESTORED TO TESSERACT-ONLY APPROACH
 // User confirmed: Tesseract was extracting correctly
@@ -166,7 +205,10 @@ except Exception as e:
     print(json.dumps({"success": False, "error": str(e)}))
 `;
       
-      const pythonExe = 'C:\\\\Users\\\\SumanYadav Personal\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\python.exe';
+      // Use getPythonExecutable() instead of hardcoded path
+      const pythonExe = getPythonExecutable();
+      console.log('🐍 Using Python executable:', pythonExe);
+      
       const python = spawn(pythonExe, ['-c', pythonScript], {
         timeout: 180000,
         maxBuffer: 20 * 1024 * 1024,

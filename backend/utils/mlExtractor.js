@@ -6,8 +6,6 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 const { spawn } = require('child_process');
-const { correctMedicalText, detectMedicalDocumentType } = require('./medicalDictionary');
-const { applyUniversalDictionary, getCorrectionsStatistics } = require('./universalDictionary');
 
 // Initialize Hugging Face client
 const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
@@ -137,25 +135,8 @@ class MLExtractor {
   postProcessText(text) {
     let processed = text;
 
-    // LEVEL 1: Apply universal dictionary (500+ trained patterns)
-    console.log('📚 [LEVEL 1] Applying Universal Dictionary corrections...');
-    const dictResult = applyUniversalDictionary(processed);
-    processed = dictResult.corrected_text;
-    
-    if (dictResult.corrections_made.length > 0) {
-      const stats = getCorrectionsStatistics(dictResult.corrections_made);
-      console.log(`   ✅ Applied ${dictResult.total_corrections} universal corrections`);
-      console.log(`   📊 Average confidence: ${(dictResult.average_confidence * 100).toFixed(1)}%`);
-      console.log(`   🏥 Medical terms: ${stats.by_category.medical || 0}`);
-      console.log(`   💰 Financial terms: ${stats.by_category.financial || 0}`);
-    }
-
-    // LEVEL 2: Apply medical dictionary (hospital-specific corrections)
-    console.log('🏥 [LEVEL 2] Applying Medical Dictionary corrections...');
-    processed = correctMedicalText(processed);
-
-    // LEVEL 3: Fix common number/letter confusions in financial contexts
-    console.log('💰 [LEVEL 3] Applying Financial Pattern corrections...');
+    // Fix common number/letter confusions in financial contexts
+    console.log('💰 Applying pattern corrections...');
     const lines = processed.split('\n');
     const fixedLines = lines.map(line => {
       // Look for monetary amounts
@@ -180,7 +161,7 @@ class MLExtractor {
     });
 
     processed = fixedLines.join('\n');
-    console.log('   ✅ Financial patterns corrected');
+    console.log('   ✅ Pattern corrections applied');
     
     return processed;
   }

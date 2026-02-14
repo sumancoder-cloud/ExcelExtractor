@@ -70,8 +70,18 @@ app.use(helmet({
 
 // Body parsing middleware
 app.use(cookieParser());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '50mb' })); // Increased from 10mb
+app.use(express.urlencoded({ extended: true, limit: '50mb' })); // Increased from 10mb
+
+// Increase timeout for file upload routes - PDFs take longer to process
+app.use((req, res, next) => {
+  // Set longer timeout for upload routes (5 minutes for PDFs)
+  if (req.path.includes('/api/convert/upload')) {
+    req.setTimeout(300000); // 5 minutes
+    res.setTimeout(300000); // 5 minutes
+  }
+  next();
+});
 
 // Passport middleware
 const passport = require('passport');

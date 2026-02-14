@@ -67,11 +67,17 @@ router.post('/upload', protect, upload.single('file'), async (req, res) => {
 
     const filePath = req.file.path;
     const fileType = req.file.mimetype;
+    const fileSize = req.file.size / 1024 / 1024; // in MB
 
     console.log('File received:', req.file.originalname);
     console.log('File type:', fileType);
     console.log('File path:', filePath);
-    console.log('File size:', (req.file.size / 1024 / 1024).toFixed(2), 'MB');
+    console.log('File size:', fileSize.toFixed(2), 'MB');
+
+    // Warn if PDF is large
+    if (fileType === 'application/pdf' && fileSize > 20) {
+      console.warn('⚠️ Large PDF detected:', fileSize.toFixed(2), 'MB - processing may take a while');
+    }
 
     let result;
     const startConversion = Date.now();
@@ -88,7 +94,8 @@ router.post('/upload', protect, upload.single('file'), async (req, res) => {
         throw new Error('Unsupported file type');
       }
       
-      console.log(`✅ Conversion completed in ${Date.now() - startConversion}ms`);
+      const conversionTime = Date.now() - startConversion;
+      console.log(`✅ Conversion completed in ${Math.round(conversionTime / 1000)} seconds`);
     } catch (conversionError) {
       console.error('❌ Conversion failed:', conversionError.message);
       

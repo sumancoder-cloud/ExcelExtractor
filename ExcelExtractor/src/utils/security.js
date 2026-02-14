@@ -10,26 +10,17 @@ export const useSecurity = () => {
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (isAuthenticated) {
-        // Clear sensitive data on page unload
+        // Clear sensitive data on page unload (but NOT token/user - we keep those for persistence)
         sessionStorage.clear();
       }
     };
 
-    const handleUnload = () => {
-      if (isAuthenticated) {
-        // Force logout on page unload to prevent session hijacking
-        logoutUser();
-      }
-    };
-
     window.addEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('unload', handleUnload);
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
-      window.removeEventListener('unload', handleUnload);
     };
-  }, [isAuthenticated, logoutUser]);
+  }, [isAuthenticated]);
 
   // Secure logout function
   const secureLogout = () => {
@@ -64,24 +55,18 @@ export const useSecurity = () => {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
 
+    // If NOT authenticated (logged out state), don't check
+    if (!isAuthenticated) {
+      return true;
+    }
+
     // Check if token exists but user doesn't (or vice versa)
     if ((token && !user) || (!token && user)) {
-      console.warn('Security warning: Inconsistent authentication data');
+      console.warn('⚠️ [SECURITY] Inconsistent authentication data - logging out');
       secureLogout();
       return false;
     }
 
-    // Check for multiple tabs/windows with different auth states
-    const currentAuthState = isAuthenticated ? 'authenticated' : 'unauthenticated';
-    const storedAuthState = sessionStorage.getItem('authState');
-
-    if (storedAuthState && storedAuthState !== currentAuthState) {
-      console.warn('Security warning: Authentication state mismatch across tabs');
-      secureLogout();
-      return false;
-    }
-
-    sessionStorage.setItem('authState', currentAuthState);
     return true;
   };
 

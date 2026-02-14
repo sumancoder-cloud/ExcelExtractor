@@ -27,4 +27,30 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-"backend/google-vision-api.json"  
+"backend/google-vision-api.json"
+
+# Test and temporary files
+backend/testGoogleVisionAPI.js
+backend/utils/convertPdfToImages.py
+backend/utils/extract_scanned_pdf.py
+backend/utils/medicalDictionary.js
+backend/utils/testHandwrittenExtraction.js
+backend/utils/universalDictionary.js
+test_paddle_installation.py
+backend/test-user.js
+
+# Documentation files (guides and temporary docs)
+ARCHITECTURE_IMPROVEMENTS.md
+GETTING_STARTED_PADDLE.md
+MEDICAL_DICTIONARY_GUIDE.md
+PADDLE_OCR_SETUP.md
+QUICK_PADDLE_REFERENCE.md
+SCANNED_PDF_GUIDE.md
+SCANNED_PDF_QUICK_START.md
+SCANNED_PDF_SUPPORT.md
+
+# PDF files
+*.pdf
+
+# Misc
+Thumbs.db

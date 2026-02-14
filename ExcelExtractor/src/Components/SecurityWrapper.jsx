@@ -41,8 +41,9 @@ const SecurityWrapper = ({ children }) => {
     // Handle page unload
     const handleBeforeUnload = (e) => {
       if (isAuthenticated) {
-        // Clear sensitive data from memory
+        // Clear sensitive data from memory (but NOT localStorage - we keep it for persistence)
         // Note: This doesn't prevent all forms of session hijacking but adds a layer of security
+        console.log('🧹 [SECURITY] Page unloading - clearing sessionStorage only');
         sessionStorage.clear();
       }
     };

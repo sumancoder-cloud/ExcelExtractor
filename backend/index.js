@@ -50,7 +50,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Security middleware
+// Security middleware with proper COOP handling for Google OAuth
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -58,11 +58,14 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      scriptSrc: ["'self'"],
-      connectSrc: ["'self'", "http://localhost:5173", "http://localhost:5174", "http://127.0.0.1:5173", "http://127.0.0.1:5174"],
+      scriptSrc: ["'self'", "https://accounts.google.com"],
+      connectSrc: ["'self'", "http://localhost:5173", "http://localhost:5174", "http://127.0.0.1:5173", "http://127.0.0.1:5174", "https://accounts.google.com"],
+      frameSrc: ["https://accounts.google.com"],
     },
   },
   crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: false,
+  crossOriginOpenerPolicy: false, // Allow COOP for Google OAuth
 }));
 
 // Body parsing middleware
@@ -77,7 +80,9 @@ app.use(passport.initialize());
 // Additional security headers
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN'); // Changed from DENY to allow OAuth
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups'); // Allow popups for Google OAuth
+
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   next();
@@ -127,12 +132,17 @@ app.listen(PORT, () => {
 });
 
 // Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-  console.error('Unhandled Promise Rejection:', err);
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Promise Rejection at:', promise, 'reason:', reason);
+  console.error('Error details:', reason?.message || reason);
+  // Don't exit process - keep server running
 });
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
+  console.error('❌ Uncaught Exception:', err.message);
+  console.error('Stack:', err.stack);
+  // Note: In production, you might want to restart the process here
+  // But for development, we keep it running
 });
 

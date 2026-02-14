@@ -51,9 +51,16 @@ const LoginPage = () => {
         
         const data = await response.json();
         
+        console.log('🔐 [GOOGLE LOGIN] API Response:', data);
+        console.log('🔐 [GOOGLE LOGIN] Success:', data.success);
+        console.log('🔐 [GOOGLE LOGIN] User:', data.user);
+        console.log('🔐 [GOOGLE LOGIN] Token:', data.token ? 'TOKEN EXISTS' : 'NO TOKEN');
+        
         if (data.success) {
+          console.log('🔐 [GOOGLE LOGIN] Calling loginUser()...');
           loginUser(data.user, data.token);
           alert(`${isSignup ? 'Account created and logged in' : 'Login'} successful with Google!`);
+          console.log('🔐 [GOOGLE LOGIN] Navigating to /main...');
           navigate("/main");
         } else {
           setError(data.message || 'Google authentication failed');
@@ -80,15 +87,36 @@ const LoginPage = () => {
 
     setLoading(true);
     try {
+      console.log('🔐 [LOGIN] Sending login request to API...');
       const response = isSignup ? await signup(formData) : await login(formData);
       
+      console.log('🔐 [LOGIN] API Response:', response);
+      console.log('🔐 [LOGIN] Response data:', response.data);
+      console.log('🔐 [LOGIN] Response success:', response.data.success);
+      console.log('🔐 [LOGIN] Response user:', response.data.user);
+      console.log('🔐 [LOGIN] Response token:', response.data.token ? 'TOKEN EXISTS' : 'NO TOKEN');
+      
       if (response.data.success) {
+        console.log('🔐 [LOGIN] Login successful! Calling loginUser()...');
         loginUser(response.data.user, response.data.token);
+        
+        // VERIFICATION: Check localStorage right after loginUser
+        setTimeout(() => {
+          console.log('🔐 [LOGIN] VERIFICATION - Checking localStorage after 100ms:');
+          console.log('🔐 [LOGIN] Token exists:', localStorage.getItem('token') ? 'YES ✅' : 'NO ❌');
+          console.log('🔐 [LOGIN] User exists:', localStorage.getItem('user') ? 'YES ✅' : 'NO ❌');
+          console.log('🔐 [LOGIN] localStorage size:', new Blob(Object.values(localStorage)).size, 'bytes');
+        }, 100);
+        
+        console.log('🔐 [LOGIN] loginUser() called. Showing alert...');
         alert(`${isSignup ? 'Account created' : 'Login'} successful!`);
+        console.log('🔐 [LOGIN] Navigating to /main...');
         navigate("/main");
+      } else {
+        console.warn('🔐 [LOGIN] API returned success: false');
       }
     } catch (error) {
-      console.error(`${isSignup ? 'Signup' : 'Login'} error:`, error);
+      console.error(`❌ [LOGIN] ${isSignup ? 'Signup' : 'Login'} error:`, error);
 
       if (!error.response) {
         setError('❌ Backend server is not running. Please start the backend server first.');

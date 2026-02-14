@@ -343,6 +343,40 @@ router.get('/validate', protect, async (req, res) => {
   }
 });
 
+// @route   POST /api/auth/refresh
+// @desc    Refresh JWT token - called when token is about to expire
+// @access  Private
+router.post('/refresh', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Generate new token (5 minutes expiry)
+    const newToken = generateToken(user._id);
+
+    res.json({
+      success: true,
+      token: newToken,
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+      }
+    });
+  } catch (error) {
+    console.error('Token refresh error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error during token refresh'
+    });
+  }
+});
+
 // @route   POST /api/auth/forgot-password
 // @desc    Send password reset OTP to email
 // @access  Public

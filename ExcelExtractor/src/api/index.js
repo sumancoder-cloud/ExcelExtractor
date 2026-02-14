@@ -28,6 +28,7 @@ API.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
+      console.warn('⚠️ [API] 401 Unauthorized - clearing localStorage');
       // Token is invalid or expired
       localStorage.removeItem('token');
       localStorage.removeItem('user');

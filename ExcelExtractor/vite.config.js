@@ -10,8 +10,15 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
+        secure: false,
+        ws: true,
       },
     },
+    // Allow Google OAuth popup to work properly
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    }
   },
   preview: {
     allowedHosts: [
@@ -21,3 +28,4 @@ export default defineConfig({
     ]
   }
 })
+

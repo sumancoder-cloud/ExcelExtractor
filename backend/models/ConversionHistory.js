@@ -54,6 +54,15 @@ const conversionHistorySchema = new mongoose.Schema({
     default: 'success',
   },
   errorMessage: String,
+  isHandwritten: {
+    type: Boolean,
+    default: false,
+  },
+  documentType: {
+    type: String,
+    enum: ['general', 'medical_bill', 'invoice', 'receipt', 'other'],
+    default: 'general',
+  },
   expiresAt: {
     type: Date,
     default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days

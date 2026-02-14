@@ -176,7 +176,26 @@ const MainPage = () => {
                     // Don't hide it automatically
                 } catch (error) {
                     console.error(`Error converting ${file.name}:`, error);
-                    alert(`Failed to convert ${file.name}: ${error.response?.data?.message || error.message}`);
+                    console.error('Error details:', {
+                        message: error.message,
+                        code: error.code,
+                        status: error.response?.status,
+                        responseData: error.response?.data,
+                        responseMessage: error.response?.data?.message,
+                        isNetwork: error.message?.includes('Network') || error.code === 'ERR_NETWORK',
+                        isTimeout: error.code === 'ECONNABORTED' || error.message?.includes('timeout'),
+                    });
+                    
+                    let errorMsg = error.response?.data?.message || error.message;
+                    
+                    // Provide helpful error messages
+                    if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+                        errorMsg = 'Upload timeout - file is too large or network is slow. Please try again or try a smaller file.';
+                    } else if (error.code === 'ERR_NETWORK' || error.message?.includes('Network')) {
+                        errorMsg = 'Network error - please check your connection and ensure the backend is running.';
+                    }
+                    
+                    alert(`Failed to convert ${file.name}: ${errorMsg}`);
                     setShowAnimation(false);
                 }
             }

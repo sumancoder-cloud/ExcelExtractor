@@ -39,6 +39,12 @@ API.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Log file uploads for debugging
+    if (config.url?.includes('/convert/upload')) {
+      console.log('📤 [API] Uploading file to:', config.url, 'Full URL:', `${API.defaults.baseURL}${config.url}`);
+    }
+    
     return config;
   },
   (error) => {
@@ -46,12 +52,26 @@ API.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle token expiry
+// Response interceptor to handle token expiry and log errors
 API.interceptors.response.use(
   (response) => {
+    if (response.config.url?.includes('/convert/upload')) {
+      console.log('✅ [API] Upload successful');
+    }
     return response;
   },
   (error) => {
+    // Log detailed error information for debugging
+    if (error.config?.url?.includes('/convert/upload')) {
+      console.error('❌ [API] Upload failed:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        message: error.response?.data?.message || error.message,
+        code: error.code,
+        url: error.config?.url,
+      });
+    }
+    
     if (error.response?.status === 401) {
       console.warn('⚠️ [API] 401 Unauthorized - clearing localStorage');
       // Token is invalid or expired
